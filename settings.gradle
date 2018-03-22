@@ -1,0 +1,1 @@
+include ':app', ':easypreferences-annotations', ':easypreferences-compiler', ':easypreferences'

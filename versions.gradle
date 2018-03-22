@@ -1,0 +1,27 @@
+def versions = [:]
+
+versions.compileSdkVersion = 26
+versions.minSdkVersion = 16
+
+versions.javapoet = "1.10.0"
+versions.autoservice = '1.0-rc4'
+versions.supportLibrary = '26.1.0'
+versions.constraint = '1.0.2'
+
+ext.versions = versions
+
+
+def deps = [:]
+
+deps.javapoet = "com.squareup:javapoet:$versions.javapoet"
+deps.autoservice = "com.google.auto.service:auto-service:$versions.autoservice"
+
+ext.deps = deps
+
+
+def support = [:]
+
+support.compat = "com.android.support:appcompat-v7:$versions.supportLibrary"
+support.constraint = "com.android.support.constraint:constraint-layout:$versions.constraint"
+
+ext.support = support

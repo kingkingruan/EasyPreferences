@@ -1,0 +1,12 @@
+package com.kingkingduanduan.easypreferences;
+
+import com.kingkingduanduan.easypreferences.annotations.Preferences;
+
+/**
+ * Created by ruanjinjing on 2018/3/22.
+ */
+
+@Preferences
+public interface SettingPreferences {
+    void setOpenGps(boolean isOpen);
+}
