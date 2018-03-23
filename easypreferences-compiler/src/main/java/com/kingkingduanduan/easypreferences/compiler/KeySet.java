@@ -32,18 +32,18 @@ public class KeySet {
             if (returnType.getKind() != TypeKind.VOID) {
                 throw new IllegalArgumentException(simpleName + " must return Void");
             }
-            //todo check method valid
+            checkSetMethod(executableElement);
             if (keyElements == null) {
-                keyElements = new KeyElements();
+                keyElements = new KeyElements(simpleName);
             }
             keyElements.setSetMethod(executableElement);
         } else if (simpleName.startsWith(GET)) {
             if (returnType.getKind() == TypeKind.VOID) {
                 throw new IllegalArgumentException(simpleName + " must not return Void");
             }
-            // TODO: 2018/3/23  check method valid
+            checkGetMethod(executableElement);
             if (keyElements == null) {
-                keyElements = new KeyElements();
+                keyElements = new KeyElements(simpleName);
             }
             keyElements.setGetMethod(executableElement);
         } else {
@@ -52,6 +52,10 @@ public class KeySet {
     }
 
     private void checkSetMethod(ExecutableElement executableElement) {
+
+    }
+
+    private void checkGetMethod(ExecutableElement executableElement) {
 
     }
 
