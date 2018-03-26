@@ -13,7 +13,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
         void setCheckVersion(int version);
         int getCheckVersion();
     }
-
+    
     public class MainActivity extends AppCompatActivity {
         private static final String TAG = "MainActivity";
         
@@ -33,7 +33,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 ## TODO
 
-- [ ] support String
+- [x] support String
 - [ ] remove key
 - [ ] clear all keys
 - [ ] define the name of SharedPreferences
