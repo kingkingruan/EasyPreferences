@@ -15,7 +15,7 @@ public class EasyPreferences {
         T instance = null;
         String simpleName = t.getSimpleName();
         try {
-            String canName = "com.kingkingduanduan.easypreferences.Easy" + simpleName;
+            String canName = "com.kingkingduanduan.preferences.Easy" + simpleName;
             Class imple = t.getClassLoader().loadClass(canName);
             Constructor<T> constructor = imple.getConstructor(Context.class);
             instance = constructor.newInstance(context);

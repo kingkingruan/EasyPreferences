@@ -8,7 +8,7 @@ import com.kingkingduanduan.easypreferences.annotations.Preferences;
 
 @Preferences
 public interface SimplePreferences {
-    void setCheckVersion(String version);
+    void setCheckVersion(int version);
 
-    String getCheckVersion();
+    int getCheckVersion();
 }

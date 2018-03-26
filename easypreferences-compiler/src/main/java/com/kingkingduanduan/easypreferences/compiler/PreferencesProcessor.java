@@ -56,9 +56,9 @@ public class PreferencesProcessor extends AbstractProcessor {
         for (Element element : env.getElementsAnnotatedWith(Preferences.class)) {
             TypeElement typeElement = (TypeElement) element;
             checkPreferencesValid(element);
-            KeySet keySet = new KeySet();
+            KeySet keySet = new KeySet(typeElement);
             parseTypeElement(keySet, typeElement);
-            JavaFile javaFile = keySet.brewJava(elements, typeElement);
+            JavaFile javaFile = keySet.brewJava();
             try {
                 javaFile.writeTo(filer);
             } catch (IOException e) {

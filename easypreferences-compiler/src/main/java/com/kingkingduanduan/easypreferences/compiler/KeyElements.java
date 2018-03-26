@@ -11,7 +11,7 @@ import javax.lang.model.type.TypeMirror;
  */
 
 public class KeyElements {
-    public String key;
+    private String key;
     private ExecutableElement setMethod;
     private ExecutableElement getMethod;
 
@@ -45,5 +45,17 @@ public class KeyElements {
             throw new IllegalArgumentException("");
         }
         this.getMethod = getMethod;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public ExecutableElement getSetMethod() {
+        return setMethod;
+    }
+
+    public ExecutableElement getGetMethod() {
+        return getMethod;
     }
 }
