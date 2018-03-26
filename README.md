@@ -42,3 +42,4 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [x] support  type of Set<String>
 - [ ] support all types
 - [ ] support compile
+- [ ] support boolean when commit the value

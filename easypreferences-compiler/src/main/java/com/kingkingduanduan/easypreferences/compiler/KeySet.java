@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
@@ -70,11 +71,25 @@ public class KeySet {
     }
 
     private void checkSetMethod(ExecutableElement executableElement) {
-
+        List<? extends VariableElement> params = executableElement.getParameters();
+        if (params == null || params.size() != 1) {
+            throw new IllegalArgumentException("one params");
+        }
+        TypeMirror typeMirror = executableElement.getReturnType();
+        if (typeMirror.getKind() != TypeKind.VOID) {
+            throw new IllegalArgumentException(executableElement.getSimpleName() + " must returns void");
+        }
     }
 
     private void checkGetMethod(ExecutableElement executableElement) {
-
+        List<? extends VariableElement> params = executableElement.getParameters();
+        if (params == null || params.size() != 0) {
+            throw new IllegalArgumentException("no param");
+        }
+        TypeMirror typeMirror = executableElement.getReturnType();
+        if (typeMirror.getKind() == TypeKind.VOID) {
+            throw new IllegalArgumentException(executableElement.getSimpleName() + " returns void");
+        }
     }
 
     public JavaFile brewJava() {
