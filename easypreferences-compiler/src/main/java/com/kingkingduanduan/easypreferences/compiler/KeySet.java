@@ -146,6 +146,8 @@ public class KeySet {
             type = "Long";
         } else if ("java.lang.String".equals(unboxed.toString())) {
             type = "String";
+        } else if ("java.util.Set<java.lang.String>".equals(unboxed.toString())) {
+            type = "StringSet";
         }
         return type;
     }
@@ -163,6 +165,8 @@ public class KeySet {
             type = "0l";
         } else if ("java.lang.String".equals(unboxed.toString())) {
             type = "\"\"";
+        } else if ("java.util.Set<java.lang.String>".equals(unboxed.toString())) {
+            type = "null";
         }
         return type;
     }

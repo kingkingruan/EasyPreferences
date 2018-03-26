@@ -39,6 +39,6 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [ ] define the name of SharedPreferences
 - [ ] support setting default value
 - [ ] support using method of Apply to submit
-- [ ] support  type of Set<String>
+- [x] support  type of Set<String>
 - [ ] support all types
 - [ ] support compile
