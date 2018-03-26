@@ -12,10 +12,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SimplePreferences simplePreferences = EasyPreferences.getSharedPreferences(this, SimplePreferences.class);
-        Log.e(TAG, simplePreferences == null ? "null" : "not null");
         if (simplePreferences != null) {
-            simplePreferences.setCheckVersion(120);
-            Log.e(TAG, "" + simplePreferences.getCheckVersion());
+            simplePreferences.setInt(120);
+            Log.e(TAG, "int " + simplePreferences.getInt());
+            simplePreferences.setString("Hello, World!");
+            Log.e(TAG, "string " + simplePreferences.getString());
+            simplePreferences.setBoolean(true);
+            Log.e(TAG, "boolean " + String.valueOf(simplePreferences.getBoolean()));
+            simplePreferences.setLong(222);
+            Log.e(TAG, "long " + String.valueOf(simplePreferences.getLong()));
+            simplePreferences.setFloat(0.234f);
+            Log.e(TAG, "float " + String.valueOf(simplePreferences.getFloat()));
+        } else {
+            Log.e(TAG, "Can't load class SimplePreferences");
         }
     }
 }

@@ -125,7 +125,7 @@ public class KeySet {
                 MethodSpec getMethodSpec = MethodSpec.methodBuilder(get.getSimpleName().toString())
                         .returns(getType)
                         .addModifiers(Modifier.PUBLIC)
-                        .addStatement("return sharedPreferences.get$N($S,$N)", getPutType(getType), key, getDefaultVlaue(getType))
+                        .addStatement("return sharedPreferences.get$N($S,$N)", getPutType(getType), key, getDefaultValue(getType))
                         .build();
                 methodSpecs.add(getMethodSpec);
             }
@@ -135,32 +135,34 @@ public class KeySet {
 
     private String getPutType(TypeName typeName) {
         String type = "";
-        if (typeName == TypeName.BOOLEAN) {
+        TypeName unboxed = typeName.isBoxedPrimitive() ? typeName.unbox() : typeName;
+        if (unboxed == TypeName.BOOLEAN) {
             type = "Boolean";
-        } else if (typeName == TypeName.FLOAT) {
+        } else if (unboxed == TypeName.FLOAT) {
             type = "Float";
-        } else if (typeName == TypeName.INT) {
+        } else if (unboxed == TypeName.INT) {
             type = "Int";
-        } else if (typeName == TypeName.LONG) {
+        } else if (unboxed == TypeName.LONG) {
             type = "Long";
-        } else if (typeName == TypeName.CHAR) {
+        } else if ("java.lang.String".equals(unboxed.toString())) {
             type = "String";
         }
         return type;
     }
 
-    private String getDefaultVlaue(TypeName typeName) {
+    private String getDefaultValue(TypeName typeName) {
         String type = "";
-        if (typeName == TypeName.BOOLEAN) {
+        TypeName unboxed = typeName.isBoxedPrimitive() ? typeName.unbox() : typeName;
+        if (unboxed == TypeName.BOOLEAN) {
             type = "false";
-        } else if (typeName == TypeName.FLOAT) {
+        } else if (unboxed == TypeName.FLOAT) {
             type = "0.0f";
-        } else if (typeName == TypeName.INT) {
+        } else if (unboxed == TypeName.INT) {
             type = "0";
-        } else if (typeName == TypeName.LONG) {
+        } else if (unboxed == TypeName.LONG) {
             type = "0l";
-        } else if (typeName == TypeName.CHAR) {
-            type = "";
+        } else if ("java.lang.String".equals(unboxed.toString())) {
+            type = "\"\"";
         }
         return type;
     }

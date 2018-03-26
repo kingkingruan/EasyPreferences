@@ -8,7 +8,19 @@ import com.kingkingduanduan.easypreferences.annotations.Preferences;
 
 @Preferences
 public interface SimplePreferences {
-    void setCheckVersion(int version);
 
-    int getCheckVersion();
+    void setInt(int version);
+    int getInt();
+
+    void setString(String value);
+    String getString();
+
+    void setBoolean(boolean value);
+    boolean getBoolean();
+
+    void setLong(long value);
+    long getLong();
+
+    void setFloat(Float value);
+    float getFloat();
 }
