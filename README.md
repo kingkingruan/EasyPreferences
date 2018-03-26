@@ -2,7 +2,7 @@
 
 Easy to use SharedPreferences
 
-Use Annotaions and Compile-time Processing to generate the code , so you can save value just with methods.
+Use Annotations and Compile-time Processing to generate the code , so you can save value just with methods.
 
 ## Sample
 
@@ -33,6 +33,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 ## TODO
 
+- [ ] support String
 - [ ] remove key
 - [ ] clear all keys
 - [ ] define the name of SharedPreferences
