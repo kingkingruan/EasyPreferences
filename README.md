@@ -22,8 +22,23 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             SimplePreferences simplePreferences = EasyPreferences.getSharedPreferences(this, SimplePreferences.class);
-            simplePreferences.setCheckVersion(120);
-            Log.e(TAG, "" + simplePreferences.getCheckVersion());
+            simplePreferences.setInt(120);
+            Log.e(TAG, "int " + simplePreferences.getInt());
+            simplePreferences.setString("Hello, World!");
+            Log.e(TAG, "string " + simplePreferences.getString());
+            simplePreferences.setBoolean(true);
+            Log.e(TAG, "boolean " + String.valueOf(simplePreferences.getBoolean()));
+            simplePreferences.setLong(222);
+            Log.e(TAG, "long " + String.valueOf(simplePreferences.getLong()));
+            simplePreferences.setFloat(0.234f);
+            Log.e(TAG, "float " + String.valueOf(simplePreferences.getFloat()));
+            Set<String> stringSet = new HashSet<>();
+            stringSet.add("set1");
+            stringSet.add("set2");
+            simplePreferences.setSetString(stringSet);
+            Log.e(TAG, "stringSet " + simplePreferences.getSetString());
+            simplePreferences.clear();
+            Log.e(TAG, "string " + simplePreferences.getString());
         }
     }
 
