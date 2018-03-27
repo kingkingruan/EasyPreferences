@@ -117,7 +117,7 @@ public class KeySet {
     }
 
     public JavaFile brewJava() {
-        return JavaFile.builder("com.kingkingduanduan.preferences", createType())
+        return JavaFile.builder(PreferencesProcessor.packageName, createType())
                 .addFileComment("Generated code from EasyPreferences. Do not modify!")
                 .build();
     }

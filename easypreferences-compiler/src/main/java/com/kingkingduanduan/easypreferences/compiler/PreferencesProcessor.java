@@ -2,11 +2,9 @@ package com.kingkingduanduan.easypreferences.compiler;
 
 import com.google.auto.service.AutoService;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,9 +32,13 @@ import static javax.lang.model.element.ElementKind.INTERFACE;
 @SupportedAnnotationTypes("com.kingkingduanduan.easypreferences.annotations.Preferences")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class PreferencesProcessor extends AbstractProcessor {
+    private static final String DEFAULT_PACKAGE_NAME = "com.kingkingduanduan.preferences";
+
     private Filer filer;
     private Types types;
     private Elements elements;
+
+    public static String packageName = DEFAULT_PACKAGE_NAME;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -44,10 +46,16 @@ public class PreferencesProcessor extends AbstractProcessor {
         filer = processingEnvironment.getFiler();
         types = processingEnvironment.getTypeUtils();
         elements = processingEnvironment.getElementUtils();
+//        Map<String, String> options = processingEnvironment.getOptions();
+//        String argument = options.get("easyPreferencesPackage");
+//        if (argument != null && argument.length() > 0) {
+//            packageName = argument;
+//        }
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+
         findAndParseTargets(roundEnvironment);
         return false;
     }

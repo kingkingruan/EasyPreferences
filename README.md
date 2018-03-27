@@ -58,3 +58,4 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [ ] support all types
 - [ ] support compile
 - [ ] support boolean when commit the value
+- [ ] support customize package name of generate classes
