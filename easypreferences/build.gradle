@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion versions.compileSdkVersion
@@ -7,7 +8,7 @@ android {
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.compileSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
     }
 
     buildTypes {
@@ -16,7 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -24,4 +30,15 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation support.compat
+}
+
+
+
+publish {
+    userOrg = 'kkdandan'      //bintray注册的用户名
+    groupId = 'com.kkdandan'         //compile引用时的第1部分groupId
+    artifactId = 'easypreferences'     //compile引用时的第2部分项目名
+    publishVersion = '0.0.1'    //compile引用时的第3部分版本号
+    desc = 'Easy to use SharedPreferences'
+    website = 'https://github.com/kingkingruan/EasyPreferences'
 }

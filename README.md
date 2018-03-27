@@ -4,6 +4,41 @@ Easy to use SharedPreferences
 
 Use Annotations and Compile-time Processing to generate the code , so you can save value just with methods.
 
+## Version
+
+| Module         | easypreferences                                              | easypreferences-compiler                                     |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Latest Version | [ ![Download](https://api.bintray.com/packages/kkdandan/maven/easypreferences/images/download.svg) ](https://bintray.com/kkdandan/maven/easypreferences/_latestVersion) | [ ![Download](https://api.bintray.com/packages/kkdandan/maven/easypreferences-compiler/images/download.svg) ](https://bintray.com/kkdandan/maven/easypreferences-compiler/_latestVersion)|
+
+## Download
+
+depend via Maven:
+
+```
+<dependency>
+  <groupId>com.kkdandan</groupId>
+  <artifactId>easypreferences</artifactId>
+  <version>0.0.1</version>
+  <type>pom</type>
+</dependency>
+
+<dependency>
+  <groupId>com.kkdandan</groupId>
+  <artifactId>easypreferences-compiler</artifactId>
+  <version>0.0.1</version>
+  <type>pom</type>
+</dependency>
+```
+
+or Gradle
+
+```
+compile 'com.kkdandan:easypreferences:0.0.1'
+compile 'com.kkdandan:easypreferences-compiler:0.0.1'
+```
+
+
+
 ## Sample
 
 Define an interface , and then Use class EasyPreferences to get the instance of interface.
@@ -59,3 +94,8 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [ ] support compile
 - [ ] support boolean when commit the value
 - [ ] support customize package name of generate classes
+
+## Other
+
+- **WeChat:**  helloworld12
+- **Email:**   rjjdick@gmail.com
