@@ -31,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
             stringSet.add("set2");
             simplePreferences.setSetString(stringSet);
             Log.e(TAG, "stringSet " + simplePreferences.getSetString());
+            simplePreferences.clear();
+            Log.e(TAG, "string " + simplePreferences.getString());
         } else {
             Log.e(TAG, "Can't load class SimplePreferences");
         }
+        getSharedPreferences("eee", MODE_PRIVATE).edit().clear().commit();
     }
 }

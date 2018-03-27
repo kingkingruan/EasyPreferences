@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences;
 
+import com.kingkingduanduan.easypreferences.annotations.Clear;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
 
 import java.util.Set;
@@ -34,4 +35,7 @@ public interface SimplePreferences {
     void setSetString(Set<String> stringSet);
 
     Set<String> getSetString();
+
+    @Clear
+    void clear();
 }

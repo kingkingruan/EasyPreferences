@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences.compiler;
 
+import com.kingkingduanduan.easypreferences.annotations.Clear;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -32,6 +34,7 @@ public class KeySet {
     private final String spName;
 
     Map<String, KeyElements> keyMethodsMap = new HashMap<>();
+    private ExecutableElement clearElement;
 
     public KeySet(TypeElement typeElement) {
         this.typeElement = typeElement;
@@ -42,31 +45,52 @@ public class KeySet {
 
     public void put(ExecutableElement executableElement) {
         String methodName = executableElement.getSimpleName().toString();
-        String key = methodName.substring(3);
         TypeMirror returnType = executableElement.getReturnType();
-        KeyElements keyElements = keyMethodsMap.get(key);
-        if (methodName.startsWith(SET)) {
-            if (returnType.getKind() != TypeKind.VOID) {
-                throw new IllegalArgumentException(methodName + " must return Void");
+        List<? extends AnnotationMirror> annotationMirrorList = executableElement.getAnnotationMirrors();
+        if (annotationMirrorList != null && annotationMirrorList.size() > 0) {
+            String clearClassName = Clear.class.getName();
+            for (AnnotationMirror annotationMirror : annotationMirrorList) {
+                if (annotationMirror.getAnnotationType().toString().equals(clearClassName)) {
+                    List<? extends VariableElement> params = executableElement.getParameters();
+                    if (params != null && params.size() > 0) {
+                        throw new IllegalArgumentException(methodName + " is clear method, need not params");
+                    }
+                    if (returnType.getKind() != TypeKind.VOID) {
+                        throw new IllegalArgumentException(methodName + " : clear method must return void");
+                    }
+                    if (clearElement == null) {
+                        clearElement = executableElement;
+                    } else {
+                        throw new IllegalArgumentException("more than one @Clear");
+                    }
+                }
             }
-            checkSetMethod(executableElement);
-            if (keyElements == null) {
-                keyElements = new KeyElements(key);
-                keyMethodsMap.put(key, keyElements);
-            }
-            keyElements.setSetMethod(executableElement);
-        } else if (methodName.startsWith(GET)) {
-            if (returnType.getKind() == TypeKind.VOID) {
-                throw new IllegalArgumentException(methodName + " must not return Void");
-            }
-            checkGetMethod(executableElement);
-            if (keyElements == null) {
-                keyElements = new KeyElements(key);
-                keyMethodsMap.put(key, keyElements);
-            }
-            keyElements.setGetMethod(executableElement);
         } else {
-            throw new IllegalArgumentException(methodName + "can't parse");
+            String key = methodName.substring(3);
+            KeyElements keyElements = keyMethodsMap.get(key);
+            if (methodName.startsWith(SET)) {
+                if (returnType.getKind() != TypeKind.VOID) {
+                    throw new IllegalArgumentException(methodName + " must return Void");
+                }
+                checkSetMethod(executableElement);
+                if (keyElements == null) {
+                    keyElements = new KeyElements(key);
+                    keyMethodsMap.put(key, keyElements);
+                }
+                keyElements.setSetMethod(executableElement);
+            } else if (methodName.startsWith(GET)) {
+                if (returnType.getKind() == TypeKind.VOID) {
+                    throw new IllegalArgumentException(methodName + " must not return Void");
+                }
+                checkGetMethod(executableElement);
+                if (keyElements == null) {
+                    keyElements = new KeyElements(key);
+                    keyMethodsMap.put(key, keyElements);
+                }
+                keyElements.setGetMethod(executableElement);
+            } else {
+                throw new IllegalArgumentException(methodName + "can't parse");
+            }
         }
     }
 
@@ -101,8 +125,7 @@ public class KeySet {
     private TypeSpec createType() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(spName)
                 .addModifiers(Modifier.PUBLIC)
-//                .addField(contextClassName, "context", Modifier.PRIVATE)
-                .addField(sharedPreferencesClassName, "sharedPreferences", Modifier.PRIVATE)
+                .addField(sharedPreferencesClassName, "sp", Modifier.PRIVATE)
                 .addMethod(getConstructorMethod())
                 .addSuperinterface(ClassName.get(typeElement))
                 .addMethods(getMethods());
@@ -113,8 +136,7 @@ public class KeySet {
         MethodSpec constructor = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(contextClassName, "context")
-//                .addStatement("this.$N = $N", "context", "context")
-                .addStatement("sharedPreferences=context.getSharedPreferences($S,android.content.Context.MODE_PRIVATE)", spName)
+                .addStatement("sp=context.getSharedPreferences($S,android.content.Context.MODE_PRIVATE)", spName)
                 .build();
         return constructor;
     }
@@ -128,9 +150,10 @@ public class KeySet {
             if (set != null) {
                 TypeName setType = ClassName.get(set.getParameters().get(0).asType());
                 MethodSpec setMethodSpec = MethodSpec.methodBuilder(set.getSimpleName().toString())
+                        .addAnnotation(Override.class)
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(setType, "value")
-                        .addStatement("sharedPreferences.edit().put$N($S,value).commit()", getPutType(setType), key)
+                        .addStatement("sp.edit().put$N($S,value).commit()", getPutType(setType), key)
                         .build();
                 methodSpecs.add(setMethodSpec);
             }
@@ -138,12 +161,21 @@ public class KeySet {
             if (get != null) {
                 TypeName getType = ClassName.get(get.getReturnType());
                 MethodSpec getMethodSpec = MethodSpec.methodBuilder(get.getSimpleName().toString())
+                        .addAnnotation(Override.class)
                         .returns(getType)
                         .addModifiers(Modifier.PUBLIC)
-                        .addStatement("return sharedPreferences.get$N($S,$N)", getPutType(getType), key, getDefaultValue(getType))
+                        .addStatement("return sp.get$N($S,$N)", getPutType(getType), key, getDefaultValue(getType))
                         .build();
                 methodSpecs.add(getMethodSpec);
             }
+        }
+        if (clearElement != null) {
+            MethodSpec clearMethodSpec = MethodSpec.methodBuilder(clearElement.getSimpleName().toString())
+                    .addAnnotation(Override.class)
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("sp.edit().clear().commit()")
+                    .build();
+            methodSpecs.add(clearMethodSpec);
         }
         return methodSpecs;
     }

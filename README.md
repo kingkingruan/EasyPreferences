@@ -35,7 +35,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 - [x] support String
 - [ ] remove key
-- [ ] clear all keys
+- [x] clear all keys
 - [ ] define the name of SharedPreferences
 - [ ] support setting default value
 - [ ] support using method of Apply to submit
