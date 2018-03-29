@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "stringSet " + simplePreferences.getSetString());
             simplePreferences.clear();
             Log.e(TAG, "string " + simplePreferences.getString());
+            Log.e(TAG, "default float " + simplePreferences.getDefaultFloat());
+            Log.e(TAG, "default long" + simplePreferences.getDefaultLong());
+            Log.e(TAG, "default set" + simplePreferences.getDefaultSetString().toString());
         } else {
             Log.e(TAG, "Can't load class SimplePreferences");
         }

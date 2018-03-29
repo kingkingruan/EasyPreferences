@@ -87,11 +87,11 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [ ] remove key
 - [x] clear all keys
 - [ ] define the name of SharedPreferences
-- [ ] support setting default value
+- [x] support setting default value
 - [ ] support using method of Apply to submit
 - [x] support  type of Set<String>
 - [ ] support all types
-- [ ] support compile
+- [x] support compile
 - [ ] support boolean when commit the value
 - [ ] support customize package name of generate classes
 

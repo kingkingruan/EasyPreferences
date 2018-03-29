@@ -1,6 +1,7 @@
 package com.kingkingduanduan.easypreferences;
 
 import com.kingkingduanduan.easypreferences.annotations.Clear;
+import com.kingkingduanduan.easypreferences.annotations.Default;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
 
 import java.util.Set;
@@ -38,4 +39,19 @@ public interface SimplePreferences {
 
     @Clear
     void clear();
+
+    @Default("hello")
+    String getWelcome();
+
+    @Default("0")
+    int getDafaultInt();
+
+    @Default("0.0")
+    float getDefaultFloat();
+
+    @Default("10")
+    long getDefaultLong();
+
+    @Default({"hh", "gg"})
+    Set<String> getDefaultSetString();
 }

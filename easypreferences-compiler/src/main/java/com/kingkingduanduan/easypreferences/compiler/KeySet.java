@@ -1,6 +1,7 @@
 package com.kingkingduanduan.easypreferences.compiler;
 
 import com.kingkingduanduan.easypreferences.annotations.Clear;
+import com.kingkingduanduan.easypreferences.annotations.Default;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -17,6 +18,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
@@ -46,24 +48,19 @@ public class KeySet {
     public void put(ExecutableElement executableElement) {
         String methodName = executableElement.getSimpleName().toString();
         TypeMirror returnType = executableElement.getReturnType();
-        List<? extends AnnotationMirror> annotationMirrorList = executableElement.getAnnotationMirrors();
-        if (annotationMirrorList != null && annotationMirrorList.size() > 0) {
-            String clearClassName = Clear.class.getName();
-            for (AnnotationMirror annotationMirror : annotationMirrorList) {
-                if (annotationMirror.getAnnotationType().toString().equals(clearClassName)) {
-                    List<? extends VariableElement> params = executableElement.getParameters();
-                    if (params != null && params.size() > 0) {
-                        throw new IllegalArgumentException(methodName + " is clear method, need not params");
-                    }
-                    if (returnType.getKind() != TypeKind.VOID) {
-                        throw new IllegalArgumentException(methodName + " : clear method must return void");
-                    }
-                    if (clearElement == null) {
-                        clearElement = executableElement;
-                    } else {
-                        throw new IllegalArgumentException("more than one @Clear");
-                    }
-                }
+        Clear clear = executableElement.getAnnotation(Clear.class);
+        if (clear != null) {
+            List<? extends VariableElement> params = executableElement.getParameters();
+            if (params != null && params.size() > 0) {
+                throw new IllegalArgumentException(methodName + " is clear method, need not params");
+            }
+            if (returnType.getKind() != TypeKind.VOID) {
+                throw new IllegalArgumentException(methodName + " : clear method must return void");
+            }
+            if (clearElement == null) {
+                clearElement = executableElement;
+            } else {
+                throw new IllegalArgumentException("more than one @Clear");
             }
         } else {
             String key = methodName.substring(3);
@@ -148,36 +145,45 @@ public class KeySet {
             KeyElements keyElements = entry.getValue();
             ExecutableElement set = keyElements.getSetMethod();
             if (set != null) {
-                TypeName setType = ClassName.get(set.getParameters().get(0).asType());
-                MethodSpec setMethodSpec = MethodSpec.methodBuilder(set.getSimpleName().toString())
-                        .addAnnotation(Override.class)
-                        .addModifiers(Modifier.PUBLIC)
-                        .addParameter(setType, "value")
-                        .addStatement("sp.edit().put$N($S,value).commit()", getPutType(setType), key)
-                        .build();
-                methodSpecs.add(setMethodSpec);
+                methodSpecs.add(generateSetMethodSpec(key, set));
             }
             ExecutableElement get = keyElements.getGetMethod();
             if (get != null) {
-                TypeName getType = ClassName.get(get.getReturnType());
-                MethodSpec getMethodSpec = MethodSpec.methodBuilder(get.getSimpleName().toString())
-                        .addAnnotation(Override.class)
-                        .returns(getType)
-                        .addModifiers(Modifier.PUBLIC)
-                        .addStatement("return sp.get$N($S,$N)", getPutType(getType), key, getDefaultValue(getType))
-                        .build();
-                methodSpecs.add(getMethodSpec);
+                methodSpecs.add(generateGetMethodSpec(key, get));
             }
         }
         if (clearElement != null) {
-            MethodSpec clearMethodSpec = MethodSpec.methodBuilder(clearElement.getSimpleName().toString())
-                    .addAnnotation(Override.class)
-                    .addModifiers(Modifier.PUBLIC)
-                    .addStatement("sp.edit().clear().commit()")
-                    .build();
-            methodSpecs.add(clearMethodSpec);
+            methodSpecs.add(generateClearMethodSpec());
         }
         return methodSpecs;
+    }
+
+    private MethodSpec generateSetMethodSpec(String key, ExecutableElement executableElement) {
+        TypeName setType = ClassName.get(executableElement.getParameters().get(0).asType());
+        return MethodSpec.methodBuilder(executableElement.getSimpleName().toString())
+                .addAnnotation(Override.class)
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(setType, "value")
+                .addStatement("sp.edit().put$N($S,value).commit()", getPutType(setType), key)
+                .build();
+    }
+
+    private MethodSpec generateGetMethodSpec(String key, ExecutableElement executableElement) {
+        TypeName getType = ClassName.get(executableElement.getReturnType());
+        return MethodSpec.methodBuilder(executableElement.getSimpleName().toString())
+                .addAnnotation(Override.class)
+                .returns(getType)
+                .addModifiers(Modifier.PUBLIC)
+                .addStatement("return sp.get$N($S,$N)", getPutType(getType), key, getDefaultValue(executableElement))
+                .build();
+    }
+
+    private MethodSpec generateClearMethodSpec() {
+        return MethodSpec.methodBuilder(clearElement.getSimpleName().toString())
+                .addAnnotation(Override.class)
+                .addModifiers(Modifier.PUBLIC)
+                .addStatement("sp.edit().clear().commit()")
+                .build();
     }
 
     private String getPutType(TypeName typeName) {
@@ -199,21 +205,63 @@ public class KeySet {
         return type;
     }
 
-    private String getDefaultValue(TypeName typeName) {
+    private String getDefaultValue(ExecutableElement executableElement) {
+        TypeName typeName = ClassName.get(executableElement.getReturnType());
+        Default anno = executableElement.getAnnotation(Default.class);
+        String[] defaultValue = null;
+        try {
+            if (anno != null) {
+                defaultValue = anno.value();
+            }
+        } catch (MirroredTypeException mte) {
+            mte.printStackTrace();
+        }
         String type = "";
         TypeName unboxed = typeName.isBoxedPrimitive() ? typeName.unbox() : typeName;
         if (unboxed == TypeName.BOOLEAN) {
-            type = "false";
+            if (defaultValue != null && defaultValue.length > 0) {
+                type = defaultValue[0];
+            } else
+                type = "false";
         } else if (unboxed == TypeName.FLOAT) {
-            type = "0.0f";
+            if (defaultValue != null && defaultValue.length > 0) {
+                type = defaultValue[0].endsWith("f") ? defaultValue[0] : defaultValue[0] + "f";
+            } else {
+                type = "0.0f";
+            }
         } else if (unboxed == TypeName.INT) {
-            type = "0";
+            if (defaultValue != null && defaultValue.length > 0) {
+                type = defaultValue[0];
+            } else {
+                type = "0";
+            }
         } else if (unboxed == TypeName.LONG) {
-            type = "0l";
+            if (defaultValue != null && defaultValue.length > 0) {
+                type = defaultValue[0];
+            } else {
+                type = "0l";
+            }
         } else if ("java.lang.String".equals(unboxed.toString())) {
-            type = "\"\"";
+            if (defaultValue != null && defaultValue.length > 0) {
+                type = "\"" + defaultValue[0] + "\"";
+            } else {
+                type = "\"\"";
+            }
         } else if ("java.util.Set<java.lang.String>".equals(unboxed.toString())) {
-            type = "null";
+            if (defaultValue != null && defaultValue.length > 0) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("new java.util.HashSet<String>(java.util.Arrays.asList(new java.lang.String[]{");
+                for (int i = 0; i < defaultValue.length; i++) {
+                    builder.append("\"").append(defaultValue[i]).append("\"");
+                    if (i != (defaultValue.length - 1)) {
+                        builder.append(",");
+                    }
+                }
+                builder.append("}))");
+                type = builder.toString();
+            } else {
+                type = "null";
+            }
         }
         return type;
     }
