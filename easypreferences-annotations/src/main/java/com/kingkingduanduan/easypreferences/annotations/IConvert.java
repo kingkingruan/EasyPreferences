@@ -1,6 +1,6 @@
 package com.kingkingduanduan.easypreferences.annotations;
 
-public interface IConverter<T> {
+public interface IConvert<T> {
 
     String convertToString(T value);
 

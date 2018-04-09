@@ -1,6 +1,7 @@
 package com.kingkingduanduan.easypreferences;
 
 import com.kingkingduanduan.easypreferences.annotations.Clear;
+import com.kingkingduanduan.easypreferences.annotations.Converter;
 import com.kingkingduanduan.easypreferences.annotations.Default;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
 
@@ -54,4 +55,10 @@ public interface SimplePreferences {
 
     @Default({"hh", "gg"})
     Set<String> getDefaultSetString();
+
+    @Converter(UserConverter.class)
+    void setUser(User user);
+
+    @Converter(UserConverter.class)
+    User getUser();
 }

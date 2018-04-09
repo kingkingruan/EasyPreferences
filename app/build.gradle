@@ -27,4 +27,5 @@ dependencies {
     implementation support.constraint
     implementation project(':easypreferences')
     annotationProcessor project(":easypreferences-compiler")
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
