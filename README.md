@@ -83,6 +83,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 ## TODO
 
+- [ ] set和get方法的参数类型与返回类型的一致性检查
 - [x] support String
 - [ ] remove key
 - [x] clear all keys
