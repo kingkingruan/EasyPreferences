@@ -3,6 +3,7 @@ package com.kingkingduanduan.easypreferences;
 import com.kingkingduanduan.easypreferences.annotations.Clear;
 import com.kingkingduanduan.easypreferences.annotations.Converter;
 import com.kingkingduanduan.easypreferences.annotations.Default;
+import com.kingkingduanduan.easypreferences.annotations.Key;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
 
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
  * Created by ruanjinjing on 2018/3/22.
  */
 
-@Preferences
+@Preferences("simple")
 public interface SimplePreferences {
 
     void setInt(int version);
@@ -56,6 +57,7 @@ public interface SimplePreferences {
     @Default({"hh", "gg"})
     Set<String> getDefaultSetString();
 
+    @Key("defaultUser")
     @Converter(UserConverter.class)
     void setUser(User user);
 

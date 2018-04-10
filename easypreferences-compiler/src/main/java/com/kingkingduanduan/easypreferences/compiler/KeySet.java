@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences.compiler;
 
+import com.kingkingduanduan.easypreferences.annotations.Preferences;
 import com.kingkingduanduan.easypreferences.compiler.method.AbstractMethod;
 import com.kingkingduanduan.easypreferences.compiler.method.MethodFactory;
 import com.squareup.javapoet.ClassName;
@@ -7,7 +8,6 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Types;
 
 /**
  * Created by ruanjinjing on 2018/3/22.
@@ -28,13 +27,25 @@ public class KeySet {
     private final ClassName sharedPreferencesClassName;
 
     private TypeElement typeElement;
+    private final String generatedClassName;
     private final String spName;
 
     Map<String, AbstractMethod> methodMap = new HashMap<>();
 
     public KeySet(TypeElement typeElement) {
         this.typeElement = typeElement;
-        spName = "Easy" + typeElement.getSimpleName().toString();
+        generatedClassName = "Easy" + typeElement.getSimpleName().toString();
+        Preferences preferences = typeElement.getAnnotation(Preferences.class);
+        if (preferences != null) {
+            String value = preferences.value();
+            if (!Utils.isEmpty(value)) {
+                spName = value;
+            } else {
+                spName = generatedClassName;
+            }
+        } else {
+            spName = generatedClassName;
+        }
         contextClassName = ClassName.get("android.content", "Context");
         sharedPreferencesClassName = ClassName.get("android.content", "SharedPreferences");
     }
@@ -70,7 +81,7 @@ public class KeySet {
         }
         AbstractMethod anotherMethod = methodMap.get(anotherMapkey);
         if (anotherMethod != null) {
-            if (Utils.isSameType(anotherMethod.getKeyType(),method.getKeyType())) {
+            if (Utils.isSameType(anotherMethod.getKeyType(), method.getKeyType())) {
                 return true;
             } else {
                 throw new IllegalArgumentException(String.format("type of %s is not the same", key));
@@ -86,7 +97,7 @@ public class KeySet {
     }
 
     private TypeSpec createType() {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(spName)
+        TypeSpec.Builder builder = TypeSpec.classBuilder(generatedClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addField(sharedPreferencesClassName, "sp", Modifier.PRIVATE)
                 .addMethod(getConstructorMethod())

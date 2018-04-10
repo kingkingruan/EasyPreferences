@@ -1,7 +1,7 @@
 package com.kingkingduanduan.easypreferences.compiler.method;
 
 import com.kingkingduanduan.easypreferences.annotations.Converter;
-import com.kingkingduanduan.easypreferences.annotations.Default;
+import com.kingkingduanduan.easypreferences.annotations.Key;
 import com.kingkingduanduan.easypreferences.compiler.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -20,7 +20,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 public class GetMethod extends AbstractMethod {
-    private String[] defaultValue;
     private Converter converter;
     private TypeMirror returnType;
 
@@ -49,10 +48,14 @@ public class GetMethod extends AbstractMethod {
     @Override
     protected void parseElement(ExecutableElement executableElement) {
         String methodName = executableElement.getSimpleName().toString();
-        key = methodName.substring(3).toLowerCase();
-        Default defaultAnno = executableElement.getAnnotation(Default.class);
-        if (defaultAnno != null) {
-            defaultValue = defaultAnno.value();
+        Key keyAnno = executableElement.getAnnotation(Key.class);
+        if (keyAnno != null) {
+            key = keyAnno.value();
+            if (Utils.isEmpty(key)) {
+                throw new IllegalArgumentException(methodName + " Key's value can't be empty");
+            }
+        } else {
+            key = methodName.substring(3).toLowerCase();
         }
     }
 

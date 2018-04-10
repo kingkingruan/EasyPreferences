@@ -83,18 +83,19 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 ## TODO
 
-- [x] set和get方法的参数类型与返回类型的一致性检查
+- [x] check the setter and getter's type
 - [x] support String
 - [ ] remove key
 - [x] clear all keys
-- [ ] define the name of SharedPreferences
+- [x] define the name of SharedPreferences
 - [x] support setting default value
 - [ ] support using method of Apply to submit
 - [x] support  type of Set<String>
 - [x] support all types
 - [x] support compile
 - [x] support boolean when commit the value
-- [ ] support customize package name of generate classes
+- [x] support customize key
+- [ ] buffer instance of Preference
 
 ## Other
 

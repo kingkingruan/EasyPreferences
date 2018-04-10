@@ -1,6 +1,7 @@
 package com.kingkingduanduan.easypreferences.compiler.method;
 
 import com.kingkingduanduan.easypreferences.annotations.Converter;
+import com.kingkingduanduan.easypreferences.annotations.Key;
 import com.kingkingduanduan.easypreferences.compiler.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
@@ -41,7 +42,15 @@ public class SetMethod extends AbstractMethod {
     @Override
     protected void parseElement(ExecutableElement executableElement) {
         methodName = executableElement.getSimpleName().toString();
-        key = methodName.substring(3).toLowerCase();
+        Key keyAnno = executableElement.getAnnotation(Key.class);
+        if (keyAnno != null) {
+            key = keyAnno.value();
+            if (Utils.isEmpty(key)) {
+                throw new IllegalArgumentException(methodName + " Key's value can't be empty");
+            }
+        } else {
+            key = methodName.substring(3).toLowerCase();
+        }
         setType = ClassName.get(executableElement.getParameters().get(0).asType());
         converter = executableElement.getAnnotation(Converter.class);
         if (!Utils.isBasicType(setType) && converter == null) {
