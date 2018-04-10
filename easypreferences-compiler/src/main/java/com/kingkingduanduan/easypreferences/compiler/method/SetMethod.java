@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences.compiler.method;
 
+import com.kingkingduanduan.easypreferences.annotations.Apply;
 import com.kingkingduanduan.easypreferences.annotations.Converter;
 import com.kingkingduanduan.easypreferences.annotations.Key;
 import com.kingkingduanduan.easypreferences.compiler.Utils;
@@ -24,6 +25,7 @@ public class SetMethod extends AbstractMethod {
     private TypeMirror returnType;
     private Converter converter;
     private TypeName setType;
+    private Apply apply;
 
     SetMethod(ExecutableElement executableElement) {
         super(executableElement);
@@ -35,6 +37,7 @@ public class SetMethod extends AbstractMethod {
         if (params == null || params.size() != 1) {
             throw new IllegalArgumentException("need one param");
         }
+        apply = executableElement.getAnnotation(Apply.class);
         returnType = executableElement.getReturnType();
         return isValidReturnType(returnType);
     }
@@ -71,14 +74,20 @@ public class SetMethod extends AbstractMethod {
         } else {
             returnKey = "return";
         }
+        String action;
+        if (apply == null) {
+            action = "commit";
+        } else {
+            action = "apply";
+        }
         if (converter != null) {
             try {
                 Type converterValue = converter.value();
                 builder.addStatement("$T convertValue=new $N().convertToString(value)",
                         ClassName.get("java.lang", "String"),
                         converterValue.getTypeName());
-                builder.addStatement("$N sp.edit().put$N($S,convertValue).commit()",
-                        returnKey, Utils.getPutType(setType), key);
+                builder.addStatement("$N sp.edit().put$N($S,convertValue).$N()",
+                        returnKey, Utils.getPutType(setType), key, action);
             } catch (MirroredTypeException mte) {
                 DeclaredType classTypeMirror = (DeclaredType) mte.getTypeMirror();
                 TypeElement classTypeElement = (TypeElement) classTypeMirror.asElement();
@@ -86,13 +95,13 @@ public class SetMethod extends AbstractMethod {
                 builder.addStatement("$T convertValue=new $N().convertToString(value)",
                         ClassName.get("java.lang", "String"),
                         qualifiedSuperClassName);
-                builder.addStatement("$N sp.edit().put$N($S,convertValue).commit()",
-                        returnKey, Utils.getPutType(setType), key);
+                builder.addStatement("$N sp.edit().put$N($S,convertValue).$N()",
+                        returnKey, Utils.getPutType(setType), key, action);
             }
 
         } else {
-            builder.addStatement("$N sp.edit().put$N($S,value).commit()",
-                    returnKey, Utils.getPutType(setType), key);
+            builder.addStatement("$N sp.edit().put$N($S,value).$N()",
+                    returnKey, Utils.getPutType(setType), key, action);
         }
         return builder.build();
     }
@@ -110,10 +119,12 @@ public class SetMethod extends AbstractMethod {
      */
     private boolean isValidReturnType(TypeMirror returnType) {
         TypeKind typeKind = returnType.getKind();
-        if (typeKind == TypeKind.VOID || typeKind == TypeKind.BOOLEAN) {
+        if (apply != null && typeKind != TypeKind.VOID) {
+            throw new IllegalArgumentException(methodName + " apply method can't return value");
+        } else if (typeKind == TypeKind.VOID || typeKind == TypeKind.BOOLEAN) {
             return true;
         } else {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException(methodName + " only support return void or boolean");
         }
     }
 

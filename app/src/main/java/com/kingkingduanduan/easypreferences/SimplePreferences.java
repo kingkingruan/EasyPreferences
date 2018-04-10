@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences;
 
+import com.kingkingduanduan.easypreferences.annotations.Apply;
 import com.kingkingduanduan.easypreferences.annotations.Clear;
 import com.kingkingduanduan.easypreferences.annotations.Converter;
 import com.kingkingduanduan.easypreferences.annotations.Default;
@@ -23,9 +24,9 @@ public interface SimplePreferences {
 
     String getString();
 
-    void setBoolean(boolean value);
+    void setBoolean(Boolean value);
 
-    boolean getBoolean();
+    Boolean getBoolean();
 
     void setLong(long value);
 
@@ -35,6 +36,7 @@ public interface SimplePreferences {
 
     float getFloat();
 
+    @Apply
     void setSetString(Set<String> stringSet);
 
     Set<String> getSetString();

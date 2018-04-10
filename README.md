@@ -89,7 +89,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [x] clear all keys
 - [x] define the name of SharedPreferences
 - [x] support setting default value
-- [ ] support using method of Apply to submit
+- [x] support using method of Apply to submit
 - [x] support  type of Set<String>
 - [x] support all types
 - [x] support compile
