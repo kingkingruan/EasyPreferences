@@ -6,6 +6,7 @@ import com.kingkingduanduan.easypreferences.annotations.Converter;
 import com.kingkingduanduan.easypreferences.annotations.Default;
 import com.kingkingduanduan.easypreferences.annotations.Key;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
+import com.kingkingduanduan.easypreferences.annotations.Remove;
 
 import java.util.Set;
 
@@ -65,4 +66,11 @@ public interface SimplePreferences {
 
     @Converter(UserConverter.class)
     User getUser();
+
+    @Remove("string")
+    void removeString();
+
+    @Remove()
+    @Key("long")
+    boolean removeLong();
 }

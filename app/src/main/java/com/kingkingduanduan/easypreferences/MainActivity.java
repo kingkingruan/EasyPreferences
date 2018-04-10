@@ -43,6 +43,5 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "Can't load class SimplePreferences");
         }
-        getSharedPreferences("eee", MODE_PRIVATE).edit().putInt("int",1).apply();
     }
 }

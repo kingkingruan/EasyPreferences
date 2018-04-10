@@ -85,7 +85,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 - [x] check the setter and getter's type
 - [x] support String
-- [ ] remove key
+- [x] remove key
 - [x] clear all keys
 - [x] define the name of SharedPreferences
 - [x] support setting default value
