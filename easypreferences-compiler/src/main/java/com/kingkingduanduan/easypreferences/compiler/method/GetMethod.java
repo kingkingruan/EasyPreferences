@@ -100,4 +100,9 @@ public class GetMethod extends AbstractMethod {
     public String getMapKey() {
         return "get" + key;
     }
+
+    @Override
+    public TypeMirror getKeyType() {
+        return returnType;
+    }
 }

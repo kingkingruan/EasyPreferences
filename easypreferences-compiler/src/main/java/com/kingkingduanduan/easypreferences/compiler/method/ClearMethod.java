@@ -54,4 +54,9 @@ public class ClearMethod extends AbstractMethod {
     public String getMapKey() {
         return "clear";
     }
+
+    @Override
+    public TypeMirror getKeyType() {
+        return null;
+    }
 }

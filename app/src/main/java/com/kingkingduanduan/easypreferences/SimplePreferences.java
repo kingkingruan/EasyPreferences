@@ -28,7 +28,7 @@ public interface SimplePreferences {
 
     void setLong(long value);
 
-    long getLong();
+    Long getLong();
 
     void setFloat(Float value);
 

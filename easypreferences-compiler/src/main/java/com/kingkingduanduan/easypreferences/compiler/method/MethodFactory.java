@@ -9,7 +9,7 @@ public class MethodFactory {
     private static final String GET = "get";
 
     public static AbstractMethod parseMethod(ExecutableElement executableElement) {
-        AbstractMethod method = null;
+        AbstractMethod method;
         String methodName = executableElement.getSimpleName().toString();
         Clear clear = executableElement.getAnnotation(Clear.class);
         if (clear != null) {

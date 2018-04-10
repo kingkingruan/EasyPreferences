@@ -7,6 +7,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Types;
 
 /**
  * Created by ruanjinjing on 2018/3/22.
@@ -42,7 +44,9 @@ public class KeySet {
         if (method != null) {
             AbstractMethod mapValue = methodMap.get(method.getMapKey());
             if (mapValue == null) {
-                methodMap.put(method.getMapKey(), method);
+                if (checkKeyTypeMathch(method)) {
+                    methodMap.put(method.getMapKey(), method);
+                }
             } else {
                 throw new IllegalArgumentException(String.format("%s %s repeat defined",
                         mapValue.getExecutableElement().getSimpleName().toString(),
@@ -51,6 +55,28 @@ public class KeySet {
         } else {
             throw new IllegalArgumentException(executableElement.getSimpleName().toString() + " parse fail");
         }
+    }
+
+    private boolean checkKeyTypeMathch(AbstractMethod method) {
+        if ("clear".equals(method.getMapKey())) {
+            return true;
+        }
+        String key = method.getKey();
+        String anotherMapkey;
+        if (method.getMapKey().startsWith("set")) {
+            anotherMapkey = "get" + key;
+        } else {
+            anotherMapkey = "set" + key;
+        }
+        AbstractMethod anotherMethod = methodMap.get(anotherMapkey);
+        if (anotherMethod != null) {
+            if (Utils.isSameType(anotherMethod.getKeyType(),method.getKeyType())) {
+                return true;
+            } else {
+                throw new IllegalArgumentException(String.format("type of %s is not the same", key));
+            }
+        }
+        return true;
     }
 
     public JavaFile brewJava() {

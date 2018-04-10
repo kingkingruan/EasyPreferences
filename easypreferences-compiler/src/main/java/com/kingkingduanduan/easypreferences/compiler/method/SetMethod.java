@@ -107,4 +107,10 @@ public class SetMethod extends AbstractMethod {
             throw new IllegalArgumentException("");
         }
     }
+
+    @Override
+    public TypeMirror getKeyType() {
+        List<? extends VariableElement> params = executableElement.getParameters();
+        return params.get(0).asType();
+    }
 }

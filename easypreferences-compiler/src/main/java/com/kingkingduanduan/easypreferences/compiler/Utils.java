@@ -6,6 +6,7 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 
 public class Utils {
 
@@ -107,5 +108,15 @@ public class Utils {
             }
         }
         return type;
+    }
+
+    public static boolean isSameType(TypeMirror one, TypeMirror two) {
+        TypeName oneOrigin = ClassName.get(one);
+        TypeName oneUnboxed = oneOrigin.isBoxedPrimitive() ? oneOrigin.unbox() : oneOrigin;
+
+        TypeName twoOrigin = ClassName.get(two);
+        TypeName twoUnboxed = twoOrigin.isBoxedPrimitive() ? twoOrigin.unbox() : twoOrigin;
+
+        return oneUnboxed.equals(twoUnboxed);
     }
 }

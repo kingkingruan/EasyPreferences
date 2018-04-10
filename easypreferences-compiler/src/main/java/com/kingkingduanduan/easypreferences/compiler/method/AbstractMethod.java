@@ -3,6 +3,7 @@ package com.kingkingduanduan.easypreferences.compiler.method;
 import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.TypeMirror;
 
 public abstract class AbstractMethod {
     protected String key;
@@ -40,4 +41,6 @@ public abstract class AbstractMethod {
     public ExecutableElement getExecutableElement() {
         return executableElement;
     }
+
+    public abstract TypeMirror getKeyType();
 }

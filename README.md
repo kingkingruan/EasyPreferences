@@ -83,7 +83,7 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 
 ## TODO
 
-- [ ] set和get方法的参数类型与返回类型的一致性检查
+- [x] set和get方法的参数类型与返回类型的一致性检查
 - [x] support String
 - [ ] remove key
 - [x] clear all keys
@@ -91,9 +91,9 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [x] support setting default value
 - [ ] support using method of Apply to submit
 - [x] support  type of Set<String>
-- [ ] support all types
+- [x] support all types
 - [x] support compile
-- [ ] support boolean when commit the value
+- [x] support boolean when commit the value
 - [ ] support customize package name of generate classes
 
 ## Other
