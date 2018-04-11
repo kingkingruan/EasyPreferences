@@ -18,14 +18,14 @@ depend via Maven:
 <dependency>
   <groupId>com.kkdandan</groupId>
   <artifactId>easypreferences</artifactId>
-  <version>0.0.1</version>
+  <version>*.*.*</version>
   <type>pom</type>
 </dependency>
 
 <dependency>
   <groupId>com.kkdandan</groupId>
   <artifactId>easypreferences-compiler</artifactId>
-  <version>0.0.1</version>
+  <version>*.*.*</version>
   <type>pom</type>
 </dependency>
 ```
@@ -33,8 +33,8 @@ depend via Maven:
 or Gradle
 
 ```
-compile 'com.kkdandan:easypreferences:0.0.1'
-compile 'com.kkdandan:easypreferences-compiler:0.0.1'
+compile 'com.kkdandan:easypreferences:*.*.*'
+compile 'com.kkdandan:easypreferences-compiler:*.*.*'
 ```
 
 
