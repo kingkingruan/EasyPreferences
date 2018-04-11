@@ -95,7 +95,8 @@ Define an interface , and then Use class EasyPreferences to get the instance of 
 - [x] support compile
 - [x] support boolean when commit the value
 - [x] support customize key
-- [ ] buffer instance of Preference
+- [x] buffer instance of Preference
+- [ ] multi-thread concurrency
 
 ## Other
 
