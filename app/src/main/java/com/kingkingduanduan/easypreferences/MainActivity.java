@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -43,7 +44,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "user " + simplePreferences.getUser());
         } else {
             Log.e(TAG, "Can't load class SimplePreferences");
-            Map<String,?> map = getSharedPreferences("ee",MODE_PRIVATE).getAll();
+            SharedPreferences sharedPreferences = getSharedPreferences("ee", MODE_PRIVATE);
+            sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
+                }
+            });
         }
     }
 }

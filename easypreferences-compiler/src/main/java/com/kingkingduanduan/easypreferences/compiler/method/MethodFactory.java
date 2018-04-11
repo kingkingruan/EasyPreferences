@@ -21,7 +21,7 @@ public class MethodFactory {
         } else if (remove != null) {
             method = new RemoveMethod(executableElement);
         } else if (all != null) {
-            method = new AllMethod(executableElement);
+            method = new GetAllMethod(executableElement);
         } else {
             if (methodName.startsWith(SET)) {
                 method = new SetMethod(executableElement);

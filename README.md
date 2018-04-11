@@ -39,43 +39,123 @@ compile 'com.kkdandan:easypreferences-compiler:*.*.*'
 
 
 
+## API
+
+### Annotations
+
+There are eight annotations in the `easy preferences-annotations` artifact:
+
+`@Preferences` - This annotation can be used on the interface which define methods to set , get ,remove or clear value. You can set the value to define the name of SharedPreferences, if not will use the name of interface.
+
+`@Key` - This annotation can be used on the methods of setter, getter and remove to define the value of key.
+
+`@Default` - This annotation can be used on the methods of getter and its value is the default value of getter.
+
+`@All` - This annotation can be used on the method to get the all values of SharedPreferences. The return type of method must be Map<String,?> to match the result of origin method.
+
+`@Apply` - The method of setter uses 'commit()' api to submit the value. This annotation is used to switch to 'apply()' api.
+
+`@Clear` - This annotation can be used on the method which clears all values.
+
+`@Remove` - This annotation can be used on the method which remove a key.
+
+`@Converter` - This annotation can be used on the method which to save custom class. The parameter must implement the interface of IConvert.
+
+### Interface
+
+There is only one interface `IConvert` that support methods to transform between class and string so We can save all types of object. For example , we can define a class to transform json.
+
+```java
+public class UserConverter implements IConvert<User> {
+    @Override
+    public String convertToString(User value) {
+        return new Gson().toJson(value);
+    }
+
+    @Override
+    public User convertFromString(String value) {
+        return new Gson().fromJson(value, User.class);
+    }
+}
+```
+
+then we can use this on setter method of User
+
+```java
+@Preferences
+public interface SimplePreferences {
+
+    @Converter(UserConverter.class)
+    void setUser(User user);
+
+    @Converter(UserConverter.class)
+    User getUser();
+}
+```
+
+
+
 ## Sample
 
 Define an interface , and then Use class EasyPreferences to get the instance of interface.
 
-    @Preferences
-    public interface SimplePreferences {
-        void setCheckVersion(int version);
-        int getCheckVersion();
-    }
+```java
+@Preferences
+public interface SimplePreferences {
+    void setLong(long value);
+    Long getLong();
+
+    void setFloat(Float value);
+    float getFloat();
+
+    @Apply
+    void setSetString(Set<String> stringSet);
+    Set<String> getSetString();
+
+    @Default("hello")
+    String getWelcome();
+
+    @Default("0")
+    int getDafaultInt();
     
-    public class MainActivity extends AppCompatActivity {
-        private static final String TAG = "MainActivity";
-        
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-            SimplePreferences simplePreferences = EasyPreferences.getSharedPreferences(this, SimplePreferences.class);
-            simplePreferences.setInt(120);
-            Log.e(TAG, "int " + simplePreferences.getInt());
-            simplePreferences.setString("Hello, World!");
-            Log.e(TAG, "string " + simplePreferences.getString());
-            simplePreferences.setBoolean(true);
-            Log.e(TAG, "boolean " + String.valueOf(simplePreferences.getBoolean()));
-            simplePreferences.setLong(222);
-            Log.e(TAG, "long " + String.valueOf(simplePreferences.getLong()));
-            simplePreferences.setFloat(0.234f);
-            Log.e(TAG, "float " + String.valueOf(simplePreferences.getFloat()));
-            Set<String> stringSet = new HashSet<>();
-            stringSet.add("set1");
-            stringSet.add("set2");
-            simplePreferences.setSetString(stringSet);
-            Log.e(TAG, "stringSet " + simplePreferences.getSetString());
-            simplePreferences.clear();
-            Log.e(TAG, "string " + simplePreferences.getString());
-        }
+    @Default({"hh", "gg"})
+    Set<String> getDefaultSetString();
+
+    @Converter(UserConverter.class)
+    void setUser(User user);
+
+    @Converter(UserConverter.class)
+    User getUser();
+
+    @Remove("string")
+    void removeString();
+
+    @Clear
+    void clear();
+
+    @All
+    Map<String,?> getAll();
+}
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+   
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        SimplePreferences simplePreferences = EasyPreferences.getSharedPreferences(this, SimplePreferences.class);
+        simplePreferences.setInt(120);
+        simplePreferences.removeString();
+        User user = simplePreferences.getUser();
+        Map<String,?> allValues = simplePreferences.getAll();
+        simplePreferences.clear();
     }
+}
+```
+
+
 
 ## Current Features
 

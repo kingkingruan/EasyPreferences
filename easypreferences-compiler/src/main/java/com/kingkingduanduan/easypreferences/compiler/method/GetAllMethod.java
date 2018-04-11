@@ -10,11 +10,11 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
-public class AllMethod extends AbstractMethod {
+public class GetAllMethod extends AbstractMethod {
     private String methodName;
     private TypeMirror returnType;
 
-    public AllMethod(ExecutableElement executableElement) {
+    GetAllMethod(ExecutableElement executableElement) {
         super(executableElement);
     }
 

@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by ruanjinjing on 2018/3/22.
  */
 
-@Preferences("simple")
+@Preferences
 public interface SimplePreferences {
 
     void setInt(int version);

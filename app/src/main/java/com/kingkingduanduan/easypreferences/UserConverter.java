@@ -6,7 +6,7 @@ import com.kingkingduanduan.easypreferences.annotations.IConvert;
 public class UserConverter implements IConvert<User> {
     @Override
     public String convertToString(User value) {
-        return value.toString();
+        return new Gson().toJson(value);
     }
 
     @Override

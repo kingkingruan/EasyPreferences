@@ -1,6 +1,5 @@
 package com.kingkingduanduan.easypreferences;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
@@ -45,8 +44,4 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
-    }
 }
