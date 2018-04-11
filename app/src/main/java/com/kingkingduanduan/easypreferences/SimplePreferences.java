@@ -1,5 +1,8 @@
 package com.kingkingduanduan.easypreferences;
 
+import android.support.annotation.CallSuper;
+
+import com.kingkingduanduan.easypreferences.annotations.All;
 import com.kingkingduanduan.easypreferences.annotations.Apply;
 import com.kingkingduanduan.easypreferences.annotations.Clear;
 import com.kingkingduanduan.easypreferences.annotations.Converter;
@@ -8,6 +11,7 @@ import com.kingkingduanduan.easypreferences.annotations.Key;
 import com.kingkingduanduan.easypreferences.annotations.Preferences;
 import com.kingkingduanduan.easypreferences.annotations.Remove;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -73,4 +77,7 @@ public interface SimplePreferences {
     @Remove()
     @Key("long")
     boolean removeLong();
+
+    @All
+    Map<String,?> getAll();
 }

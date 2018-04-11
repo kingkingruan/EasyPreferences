@@ -1,5 +1,6 @@
 package com.kingkingduanduan.easypreferences.compiler.method;
 
+import com.kingkingduanduan.easypreferences.annotations.All;
 import com.kingkingduanduan.easypreferences.annotations.Clear;
 import com.kingkingduanduan.easypreferences.annotations.Remove;
 
@@ -14,10 +15,13 @@ public class MethodFactory {
         String methodName = executableElement.getSimpleName().toString();
         Clear clear = executableElement.getAnnotation(Clear.class);
         Remove remove = executableElement.getAnnotation(Remove.class);
+        All all = executableElement.getAnnotation(All.class);
         if (clear != null) {
             method = new ClearMethod(executableElement);
         } else if (remove != null) {
             method = new RemoveMethod(executableElement);
+        } else if (all != null) {
+            method = new AllMethod(executableElement);
         } else {
             if (methodName.startsWith(SET)) {
                 method = new SetMethod(executableElement);

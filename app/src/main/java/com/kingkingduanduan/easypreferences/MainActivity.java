@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "user " + simplePreferences.getUser());
         } else {
             Log.e(TAG, "Can't load class SimplePreferences");
+            Map<String,?> map = getSharedPreferences("ee",MODE_PRIVATE).getAll();
         }
     }
 }

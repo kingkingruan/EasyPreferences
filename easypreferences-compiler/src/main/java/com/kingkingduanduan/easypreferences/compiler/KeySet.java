@@ -75,6 +75,9 @@ public class KeySet {
         if (method.getMapKey().startsWith("remove")) {
             return true;
         }
+        if ("all".equals(method.getMapKey())) {
+            return true;
+        }
         String key = method.getKey();
         String anotherMapkey;
         if (method.getMapKey().startsWith("set")) {
