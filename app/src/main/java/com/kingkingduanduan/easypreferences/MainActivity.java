@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             User user = new User();
             user.setName("king2");
             simplePreferences.setUser(user);
-            Log.e(TAG, "user " + simplePreferences.getUser().toString());
+            Log.e(TAG, "user " + simplePreferences.getUser());
         } else {
             Log.e(TAG, "Can't load class SimplePreferences");
         }
