@@ -119,4 +119,14 @@ public class Utils {
 
         return oneUnboxed.equals(twoUnboxed);
     }
+
+    /**
+     * 获取格式化IllegalArgumentException
+     * @param value
+     * @param objects
+     * @return
+     */
+    public static IllegalArgumentException getIllegalArguentException(String value, Object... objects) {
+        return new IllegalArgumentException(String.format(value, objects));
+    }
 }

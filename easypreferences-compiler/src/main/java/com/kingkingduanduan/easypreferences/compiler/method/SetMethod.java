@@ -33,9 +33,10 @@ public class SetMethod extends AbstractMethod {
 
     @Override
     protected boolean checkElement(ExecutableElement executableElement) {
+        methodName = executableElement.getSimpleName().toString();
         List<? extends VariableElement> params = executableElement.getParameters();
         if (params == null || params.size() != 1) {
-            throw new IllegalArgumentException("need one param");
+            throw Utils.getIllegalArguentException("%s should haa one param", methodName);
         }
         apply = executableElement.getAnnotation(Apply.class);
         returnType = executableElement.getReturnType();
@@ -44,12 +45,11 @@ public class SetMethod extends AbstractMethod {
 
     @Override
     protected void parseElement(ExecutableElement executableElement) {
-        methodName = executableElement.getSimpleName().toString();
         Key keyAnno = executableElement.getAnnotation(Key.class);
         if (keyAnno != null) {
             key = keyAnno.value();
             if (Utils.isEmpty(key)) {
-                throw new IllegalArgumentException(methodName + " Key's value can't be empty");
+                throw Utils.getIllegalArguentException("%s @Key's value can not be empty", methodName);
             }
         } else {
             key = methodName.substring(3).toLowerCase();
@@ -57,7 +57,7 @@ public class SetMethod extends AbstractMethod {
         setType = ClassName.get(executableElement.getParameters().get(0).asType());
         converter = executableElement.getAnnotation(Converter.class);
         if (!Utils.isBasicType(setType) && converter == null) {
-            throw new IllegalArgumentException(methodName + " needs Converter");
+            throw Utils.getIllegalArguentException("%s saves custom type and should has @Converter", methodName);
         }
     }
 
